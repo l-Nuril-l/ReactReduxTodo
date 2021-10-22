@@ -1,25 +1,39 @@
-import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import React from "react"
+import TodoItem from "./TodoItem"
+import { connect } from 'react-redux';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  constructor(props)
+  {
+    super(props)
+    this.state = {
+      mapped: props.mapped,
+    }
+  }
+
+  static getDerivedStateFromProps(props, state)
+  {
+    return { mapped: props.mapped}
+  }
+
+  render()
+  {
+    return (
+      <>
+        {this.state.mapped}
+      </>
+    );
+  }
 }
 
-export default App;
+function mapStateToProps(state)
+{
+  return {
+    mapped: state.todos.filter(x => x.completed === false).map(todo => <TodoItem key={todo.id} todo={todo} />)
+  }
+}
+
+export default connect(mapStateToProps)(App);
